@@ -10,10 +10,10 @@ import {
 import CustomRow from "./Row";
 import DateEditor from "./Components/CellComponents/DateEditor";
 import moment from "moment";
-import { CustomIconAddUser } from "./icons";
 import AssignDriverCell from "./Components/FormatedCell/AssignDriverCell";
 import loadNoCell from "./Components/FormatedCell/loadNoCell";
 import axios from "axios";
+import useStateWithHistory from "./CustomHooks/useStateWithHistory";
 const column = [
   {
     key: "status",
@@ -123,16 +123,16 @@ const column = [
       );
     },
   },
-  {
-    key: "vessel",
-    name: "ETA",
-    sortable: true,
-    cellClass: "cell",
-    editor: DateEditor,
-    formatter: (props) => {
-      return <>{props.row.vessel}</>;
-    },
-  },
+//   {
+//     key: "vessel",
+//     name: "ETA",
+//     sortable: true,
+//     cellClass: "cell",
+//     editor: DateEditor,
+//     formatter: (props) => {
+//       return <>{props.row.vessel}</>;
+//     },
+//   },
   {
     key: "containerSize",
     name: "Size",
@@ -641,6 +641,8 @@ const column = [
 ];
 function App() {
   const [rows, setRows] = useState([]);
+  const [selectedRows, setSelectedRows, { history, pointer, back, forward, go }] =
+  useStateWithHistory(() => new Set())
   const [columns, setColumns] = useState(column);
   const [TotalLoads, setTotalLoads] = useState(0);
   const [skip, setSkip] = useState(0);
@@ -648,10 +650,25 @@ function App() {
 
   const isMounted = useRef();
   useEffect(() => {
+	document.addEventListener('keydown',keydownHandler);
     if (isMounted.current) return;
     getLoads();
     isMounted.current = true;
+	return()=>{
+		document.removeEventListener('keydown',keydownHandler);
+	}
   }, []);
+
+  const keydownHandler=(event)=>{
+	event.preventDefault();
+    let charCode = String.fromCharCode(event.which).toLowerCase();
+    if((event.ctrlKey || event.metaKey) && charCode === 'z') {
+      back()
+    }
+  }
+  useEffect(()=>{
+	 console.log(rows) 
+  },[rows])
 
   const getLoads = async () => {
     const payload = {
@@ -714,7 +731,7 @@ function App() {
 	
    
   }
-  const [selectedRows, setSelectedRows] = useState(() => new Set());
+//   const [selectedRows, setSelectedRows] = useState(() => new Set());
 
   const handlePaste = useCallback(
     (sourceColumnKey, sourceRow, targetColumnKey, targetRow) => {

@@ -11,9 +11,9 @@ import {
 
 const loadNoCell = ({ row }) => {
   return (
-    <span className="cell-content d-flex">
-      <span>{row.reference_number}</span>
-      <span className="d-flex align-items">
+    <span className="cell-content ref_number_cell">
+      <span className="h-20 lh-2">{row.reference_number}</span>
+      <span className="d-flex align-items h-20 mt-4">
         <span>
           <IconWarning
             className={`dispatch-icon ${row.hazmat && "text-warning-500"}`}

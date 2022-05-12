@@ -128,3 +128,19 @@ div[role="columnheader"] {
   color: #394e66 !important;
 }
 
+.ref_number_cell{
+	display: flex;
+	flex-direction: column;
+}
+
+.h-20{
+	height: 20px;
+}
+
+.lh-2{
+	line-height:2
+}
+
+.mt-4{
+	margin-top: 4px;
+}
